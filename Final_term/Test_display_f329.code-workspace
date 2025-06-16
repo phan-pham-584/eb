@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../Test_display_f329"
+		},
+		{
+			"name": "UART",
+			"path": "../UART"
+		},
+		{
+			"name": "Final_term",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
