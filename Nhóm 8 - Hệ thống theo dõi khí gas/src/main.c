@@ -44,7 +44,7 @@ void system_display() {
     }
 
     if (active_state == 0) {
-        LCD_SendCommand(0x01); // Clear LCD when vào lại
+        LCD_SendCommand(0x01); 
         LCD_SetCursor(1, 0);
         LCD_WriteString("System state: 1");
         LCD_SetCursor(2, 0);
@@ -56,7 +56,7 @@ void system_display() {
     }
     if(adc_display) {
         LCD_SetCursor(2, 11);
-        LCD_WriteString("    "); // clear old val
+        LCD_WriteString("    "); 
         LCD_SetCursor(2, 11);
         LCD_WriteString(adc_str);
         if(adc_value > 3000) {
@@ -71,14 +71,14 @@ void system_display() {
     if (uno == 0x00) {
         LCD_SetCursor(3, 11);
         LCD_SendData('0');
-        led_on(0); // Blue
+        led_on(0); 
         led_off(1); led_off(2); led_off(3); led_off(4);
         Timer10_Stop();
         uno = 0x05;
     } else if (uno == 0x01) {
         LCD_SetCursor(3, 11);
         LCD_SendData('1');
-        led_off(0); led_on(1); // Yellow
+        led_off(0); led_on(1); 
         led_off(2); led_off(3); led_off(4);
         Timer10_Stop();
         uno = 0x05;
@@ -128,7 +128,7 @@ void system_display() {
         uno = 0;
     }
 
-    if(adc_display) { // da sua
+    if(adc_display) { 
         LCD_SetCursor(2, 11);
         LCD_WriteString("         "); 
         LCD_SetCursor(2, 11);
@@ -174,7 +174,7 @@ void system_display() {
 
 void EXTI3_IRQHandler(void) {
     if (EXTI->PR & (1 << 3)) {
-        NVIC->ICER[0] |= (1 << 9); // da sua
+        NVIC->ICER[0] &= ~(1 << 9); 
         EXTI->PR |= (1 << 3);
         state = (state + 1) % 2; 
         active_state = false; 
@@ -184,7 +184,7 @@ void EXTI3_IRQHandler(void) {
 
 void EXTI1_IRQHandler(void) {
     if (EXTI->PR & (1 << 1)) {
-        NVIC->ICER[0] |= (1 << 7);  // da sua
+        NVIC->ICER[0] &= ~(1 << 7); 
         EXTI->PR |= (1 << 1);
         state = 2;
     }
