@@ -1,9 +1,6 @@
 #include "stm32f4xx.h"
 #include "button.h"
 
-#include "stm32f4xx.h"
-#include "button.h"
-
 void init_button(void) {
     RCC->APB2ENR |= (1 << 14);               
 
