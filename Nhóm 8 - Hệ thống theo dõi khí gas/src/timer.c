@@ -46,6 +46,8 @@ void Timer10_Init(uint32_t arr) {
 
 void Timer10_SetFreqz(uint32_t arr) {
 
+    TIM10->CNT = 0;
+
     TIM10->ARR = arr - 1;
     TIM10->CCR1 = arr/2 - 1;
 
