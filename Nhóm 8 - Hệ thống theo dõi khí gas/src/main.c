@@ -65,17 +65,17 @@ void system_display() {
         uno = 0;
     }
 
-    if(adc_display) {
+    if(adc_display) { // da sua
         LCD_SetCursor(2, 11);
         LCD_WriteString("    "); 
         LCD_SetCursor(2, 11);
         LCD_WriteString(adc_str);
         adc_display = false;
         if (ppm >= 60000) { 
-            Timer10_SetFreqz(5000 - 4000 * (adc_value - 60000) / 50000);
+            Timer10_SetFreqz(2500 - 2000 * (adc_value - 60000) / 70000);
         }
         else if(ppm > 40000 && ppm < 60000) {
-            Timer10_SetFreqz(10000);
+            Timer10_SetFreqz(5000);
         }
     }
 
@@ -111,7 +111,7 @@ void system_display() {
 
 void EXTI3_IRQHandler(void) {
     if (EXTI->PR & (1 << 3)) {
-        NVIC->ISER[0] |= (1 << 9);
+        NVIC->ICER[0] |= (1 << 9); // da sua
         EXTI->PR |= (1 << 3);
         state = (state + 1) % 2; 
         active_state = false; 
@@ -121,7 +121,7 @@ void EXTI3_IRQHandler(void) {
 
 void EXTI1_IRQHandler(void) {
     if (EXTI->PR & (1 << 1)) {
-        NVIC->ISER[0] |= (1 << 7);
+        NVIC->ICER[0] |= (1 << 7);  // da sua
         EXTI->PR |= (1 << 1);
         state = 2;
     }
@@ -158,10 +158,10 @@ void enter_sleep_mode(void) {
     
     SCB->SCR &= ~(1 << 2);
 
-    
-    NVIC->ICPR[0] = (1 << 9);  
     NVIC->ISER[0] |= (1 << 9); 
+
     SysTick->CTRL &= ~(1 << 1);
+    ADC1->CR1 &= (1 << 0);
 
 
     __WFI(); 
@@ -169,7 +169,11 @@ void enter_sleep_mode(void) {
     LCD_SetCursor(1, 0);
     LCD_WriteString("Exit sleep mode");
     Delay_Timer2(1000);
+
+    ADC1->CR1 |= (1 << 0);
     SysTick->CTRL |= (1 << 1);
+    NVIC->ISER[0] |= (1 << 7); 
+    NVIC->ISER[0] |= (1 << 9); 
 }
 
 
