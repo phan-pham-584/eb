@@ -288,7 +288,6 @@ void system_reset(void) {
     Delay_Timer2(1000);
 }
 
-volatile uint8_t reset_count = 0;
 
 int main(void) {
     system_init();
