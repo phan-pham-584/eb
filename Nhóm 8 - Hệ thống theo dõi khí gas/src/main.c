@@ -67,7 +67,7 @@ void system_display() {
 
     if(adc_display) { // da sua
         LCD_SetCursor(2, 11);
-        LCD_WriteString("    "); 
+        LCD_WriteString("         "); 
         LCD_SetCursor(2, 11);
         LCD_WriteString(adc_str);
         adc_display = false;
