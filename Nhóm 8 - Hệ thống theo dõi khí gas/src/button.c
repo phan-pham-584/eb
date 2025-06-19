@@ -5,8 +5,7 @@
 #include "button.h"
 
 void init_button(void) {
-    RCC->APB2ENR |= (1 << 14);             
-    RCC->AHB1ENR |= (1 << 0) | (1 << 1);    
+    RCC->APB2ENR |= (1 << 14);               
 
     GPIOA->MODER &= ~(3 << (3 * 2));         
     GPIOA->PUPDR &= ~(3 << (3 * 2));         
