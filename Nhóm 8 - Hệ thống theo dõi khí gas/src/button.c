@@ -20,9 +20,12 @@ void init_button(void) {
     SYSCFG->EXTICR[0] |=  (0x1 << 4);        
 
     SYSCFG->EXTICR[0] &= ~(0xF << 12);       
-    SYSCFG->EXTICR[0] |=  (0x0 << 12);       
+    SYSCFG->EXTICR[0] |=  (0x0 << 12);
 
     EXTI->IMR  |= (1 << 1) | (1 << 3);
+
+    NVIC->IP[7] = 7 << 4; 
+    NVIC->IP[9] = 9 << 4;
 
     EXTI->FTSR |= (1 << 1) | (1 << 3);
     EXTI->RTSR &= ~((1 << 1) | (1 << 3));
