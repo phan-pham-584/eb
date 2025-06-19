@@ -72,11 +72,12 @@ void system_display() {
         LCD_WriteString(adc_str);
         adc_display = false;
         if (ppm >= 60000) { 
-            Timer10_SetFreqz(2500 - 2000 * (adc_value - 60000) / 70000);
+            Timer10_SetFreqz(5000 - 4000 * (ppm - 60000) / 100000);
         }
         else if(ppm > 40000 && ppm < 60000) {
-            Timer10_SetFreqz(5000);
+            Timer10_SetFreqz(10000);
         }
+       
     }
 
     if (uno == 0x00) {
