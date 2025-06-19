@@ -44,14 +44,12 @@ void Timer10_Init(uint32_t arr) {
 }
 
 void Timer10_SetFreqz(uint32_t arr) {
-    TIM10->CNT = 0;
 
     TIM10->ARR = arr - 1;
     TIM10->CCR1 = (arr / 2) - 1;
 
     TIM10->CCER |= (1 << 0);        
     TIM10->CR1  |= (1 << 0);     
-    
 }
 
 void Timer10_Stop(void) {
