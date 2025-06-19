@@ -35,8 +35,71 @@ void SysTick_Handler(void) {
     adc_display = true;
 }
 
+void system_display() {
+    static char adc_str[6];
+    sprintf(adc_str, "%u", adc_value);
 
+    if(uno != adc_value / 1000) {
+        uno = adc_value / 1000;
+    }
 
+    if (active_state == 0) {
+        LCD_SendCommand(0x01); // Clear LCD when vào lại
+        LCD_SetCursor(1, 0);
+        LCD_WriteString("System state: 1");
+        LCD_SetCursor(2, 0);
+        LCD_WriteString("PPM value: ");
+        LCD_SetCursor(3, 0);
+        LCD_WriteString("Gas state: ");
+        active_state = 1;
+        uno = 0;
+    }
+    if(adc_display) {
+        LCD_SetCursor(2, 11);
+        LCD_WriteString("    "); // clear old val
+        LCD_SetCursor(2, 11);
+        LCD_WriteString(adc_str);
+        if(adc_value > 3000) {
+            Timer10_SetFreqz(5000 - 4000 * (adc_value - 3000) / 1095);
+        }
+        else if(adc_value < 3000 && adc_value > 2000) {
+            Timer10_SetFreqz(10000);
+        }
+        adc_display = false;
+    }
+
+    if (uno == 0x00) {
+        LCD_SetCursor(3, 11);
+        LCD_SendData('0');
+        led_on(0); // Blue
+        led_off(1); led_off(2); led_off(3); led_off(4);
+        Timer10_Stop();
+        uno = 0x05;
+    } else if (uno == 0x01) {
+        LCD_SetCursor(3, 11);
+        LCD_SendData('1');
+        led_off(0); led_on(1); // Yellow
+        led_off(2); led_off(3); led_off(4);
+        Timer10_Stop();
+        uno = 0x05;
+    } else if (uno == 0x02) {
+        LCD_SetCursor(3, 11);
+        LCD_SendData('2');
+        led_off(0); led_off(1); led_off(2); led_off(3); led_off(4);
+        uno = 0x05;
+    } else if (uno >= 0x03) {
+        LCD_SetCursor(3, 11);
+        LCD_SendData('3');
+        led_off(0); led_off(1); led_off(2); 
+        led_on(3); led_on(4);
+        uno = 0x05;
+    }
+    
+}
+
+/*
+
+Chuyển đổi sang ppm. Tuy nhiên hệ thống không ổn định do cảm biến không ổn định
 void system_display() {
 
     // Xấp xỉ giá trị ppm
@@ -44,10 +107,10 @@ void system_display() {
     float ratio = Rs / R0;
     float m = -0.38;
     float b = 1.50;
-    float ppm = pow(10, ((log10(ratio) - b) / m));
+    int ppm = pow(10, ((log10(ratio) - b) / m));
 
     static char adc_str[6];
-    sprintf(adc_str, "%u", (unsigned int)ppm );  
+    sprintf(adc_str, "%u", ppm );  
 
     if (uno != ppm / 20000) {
         uno = ppm / 20000;
@@ -71,13 +134,12 @@ void system_display() {
         LCD_SetCursor(2, 11);
         LCD_WriteString(adc_str);
         adc_display = false;
-        if (ppm >= 60000) { 
+        if (ppm >= 60000 && ppm < 160000) { 
             Timer10_SetFreqz(5000 - 4000 * (ppm - 60000) / 100000);
         }
         else if(ppm > 40000 && ppm < 60000) {
             Timer10_SetFreqz(10000);
         }
-       
     }
 
     if (uno == 0x00) {
@@ -108,7 +170,7 @@ void system_display() {
     }
 
 }
-
+    */
 
 void EXTI3_IRQHandler(void) {
     if (EXTI->PR & (1 << 3)) {
