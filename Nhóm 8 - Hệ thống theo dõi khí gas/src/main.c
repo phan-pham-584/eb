@@ -224,7 +224,7 @@ void enter_sleep_mode(void) {
     NVIC->ISER[0] |= (1 << 9); 
 
     SysTick->CTRL &= ~(1 << 1);
-    ADC1->CR1 &= (1 << 0);
+    ADC1->CR1 &= ~(1 << 0);
 
 
     __WFI(); 
