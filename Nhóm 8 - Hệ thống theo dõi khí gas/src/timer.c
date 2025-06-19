@@ -12,7 +12,7 @@ void Timer2_Init(void)
     TIM2->CR1 |= (1 << 0);    
 }      
 
-void Delay_Timer2(uint16_t ms)
+void Delay_Timer2(uint32_t ms)
 {
     TIM2->CNT = 0;
     while (TIM2->CNT < ms);         
@@ -33,7 +33,7 @@ void Timer10_Init(uint32_t arr) {
 
     TIM10->PSC = 1599;             
     TIM10->ARR = arr - 1;
-    TIM10->CCR1 = 1000;
+    TIM10->CCR1 = arr/2 -1;
 
     TIM10->CCMR1 &= ~(7 << 4);      
     TIM10->CCMR1 |=  (6 << 4);     
@@ -45,9 +45,9 @@ void Timer10_Init(uint32_t arr) {
 }
 
 void Timer10_SetFreqz(uint32_t arr) {
-    TIM10->CNT = 0;
 
     TIM10->ARR = arr - 1;
+    TIM10->CCR1 = arr/2 - 1;
 
     TIM10->CCER |= (1 << 0);        
     TIM10->CR1  |= (1 << 0);     
