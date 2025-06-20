@@ -222,6 +222,7 @@ void enter_sleep_mode(void) {
     SCB->SCR &= ~(1 << 2);
 
     NVIC->ISER[0] |= (1 << 9); 
+    NVIC->ISER[0] |= (1 << 7);
 
     SysTick->CTRL &= ~(1 << 1);
     ADC1->CR1 &= ~(1 << 0);
